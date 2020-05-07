@@ -22,7 +22,7 @@ V0 = 600 # microL
 def func1(t, o, a):
     return a * (I0 - o) * (F0 - o) # initial concentrations 50 nM; I=input, F=fuel
 
-def func2(t, a, b, T0, L0, e):
+def func2(t, a, b, T0, L0, gamma):
     ans = b * si.solve_ivp(lambda t,o: func1(t,o,a), (T0, TMAX), [L0/b], vectorized=True, dense_output=True).sol(t)[0]
     # Background fluorescence
     ans = [i + L0 for i in ans]
@@ -33,7 +33,7 @@ def func2(t, a, b, T0, L0, e):
     
     # Increased concentration due to evaporation
     for i in range(len(t)):
-        ans[i] *= V0/(V0-e*t[i])
+        ans[i] *= V0/(V0-gamma*t[i])
 
     return ans
 
